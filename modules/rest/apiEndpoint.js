@@ -22,14 +22,14 @@ export default class ApiEndpoint {
         res.end(JSON.stringify(data));
     }
 
-    static writeBadRequestResponse(res, data, modified = 0) {
+    static writeBadRequestResponse(res, data, modifier = 0) {
         res.writeHead(400 + modifier, {
             'Content-Type': 'application/json'
         });
         res.end(JSON.stringify(data));
     }
 
-    static writeServerErrorResponse(res, data, modified = 0) {
+    static writeServerErrorResponse(res, data, modifier = 0) {
         res.writeHead(500 + modifier, {
             'Content-Type': 'application/json'
         });

@@ -8,8 +8,10 @@ export default class NoteEndpoint extends ApiEndpoint {
     }
 
     async get(reqUrl, req, res) {
-        // Check search params for ID
-        const id = reqUrl.searchParams.id;
+        this.logger.logInformation(`Request request received ${reqUrl.searchParams}`, 'NoteEndpoint');
+
+        // Check search params for ID (aka business logic)
+        const id = reqUrl.searchParams.get('id');
 
         if (!id) {
             ApiEndpoint.writeBadRequestResponse(res, {
@@ -36,20 +38,17 @@ export default class NoteEndpoint extends ApiEndpoint {
 
         req.on('data', chunk => data.push(chunk));
         req.on('end', async () => {
-            const parsedData = JSON.parse(Buffer.concat(data).toString())
+            const parsedData = JSON.parse(Buffer.concat(data).toString());
 
             this.logger.logInformation('Parsed incoming data', 'NoteEndpoint');
-
-            // Debugging
-            console.log(parsedData);
 
             if (!parsedData.id || !parsedData.content) {
                 ApiEndpoint.writeBadRequestResponse(res, {
                     message: 'To create a new note you need to specify the \'id\' and \'content\' parameters'
                 }, 10);
             } else {
-                const res = await this.noteManager.createNote(parsedData.id, parsedData.content);
-                if (!res) {
+                const status = await this.noteManager.createNote(parsedData.id, parsedData.content);
+                if (!status) {
                     ApiEndpoint.writeServerErrorResponse(res, {
                         message: `Could not create note with id ${parsedData.id}`
                     }, 10);

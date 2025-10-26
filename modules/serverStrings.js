@@ -8,5 +8,5 @@ export default class ServerStrings {
 
     static NAMES_ENDPOINT   = '/names';
     static FILE_ENDPOINT    = '/file';
-    static NOTSE_ENDPOINT   = '/notes';
+    static NOTES_ENDPOINT   = '/notes';
 }
