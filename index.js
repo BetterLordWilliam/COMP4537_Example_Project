@@ -84,11 +84,6 @@ class Server {
     }
 
     async handlePublic(reqUrl, req, res) {
-        // res.writeHead(200, {
-        //     'Content-Type': 'text/html'
-        // });
-        // res.end('<h1>Hello World</h1><p>This is the main page for now</p>');
-
         try {
             const item = (reqUrl.pathname.endsWith('/') || !path.extname(reqUrl.pathname))
                 ? path.join(reqUrl.pathname, 'index.html')
@@ -98,10 +93,6 @@ class Server {
             const file      = await fs.readFile(filePath);
             const fileExt   = path.extname(filePath).toLowerCase();
             const mime      = Server.mimeTypeMap[fileExt] || 'application/octet-stream';
-
-            // console.log(filePath);
-            // console.log(fileExt);
-            // console.log(mime);
 
             res.writeHead(200, { 'Content-Type': mime });
             res.end(file);
@@ -127,10 +118,6 @@ class Server {
 
             const proto = (req.socket.encrypted) ? 'https' : 'http'; // a little redundant but in case
             const url = new URL(`${proto}://${req.headers.host}${req.url}`);
-
-            // console.log(url.href);
-            // console.log(url.pathname);
-            // console.log(url.searchParams);
 
             // API or public
             if (url.pathname.startsWith('/api')) {
