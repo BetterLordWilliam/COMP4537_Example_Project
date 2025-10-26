@@ -1,16 +1,64 @@
 import process from 'process';
 import http from 'http';
+import path from 'path';
+import fs from 'fs/promises';
 
 import Logger       from './modules/services/logger.js';
 import ApiRouter    from './modules/rest/apiRouter.js';
 
 import NamesEndpoint from './modules/rest/endpoints/names.js';
+import { pathToFileURL } from 'url';
 
 class Server {
+
+    static mimeTypeMap = {
+        // Text types
+        '.txt': 'text/plain',
+        '.html': 'text/html',
+        '.css': 'text/css',
+        '.js': 'text/javascript',
+        '.json': 'application/json',
+        '.xml': 'application/xml',
+        '.csv': 'text/csv',
+
+        // Image types
+        '.png': 'image/png',
+        '.jpg': 'image/jpeg',
+        '.jpeg': 'image/jpeg',
+        '.gif': 'image/gif',
+        '.svg': 'image/svg+xml',
+        '.webp': 'image/webp',
+        '.ico': 'image/x-icon',
+
+        // Audio types
+        '.mp3': 'audio/mpeg',
+        '.wav': 'audio/wav',
+        '.ogg': 'audio/ogg',
+
+        // Video types
+        '.mp4': 'video/mp4',
+        '.webm': 'video/webm',
+        '.mov': 'video/quicktime',
+
+        // Application/Document types
+        '.pdf': 'application/pdf',
+        '.zip': 'application/zip',
+        '.rar': 'application/x-rar-compressed',
+        '.tar': 'application/x-tar',
+        '.7z': 'application/x-7z-compressed',
+        '.doc': 'application/msword',
+        '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        '.xls': 'application/vnd.ms-excel',
+        '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        '.ppt': 'application/vnd.ms-powerpoint',
+        '.pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    };
+
     constructor() {
         // Utility
         this.port       = process.env.PORT;
         this.logPath    = process.env.LOG_PATH;
+        this.rootDir    = process.cwd();
         
         // Services
         this.logger     = new Logger(this.logPath);
@@ -28,16 +76,43 @@ class Server {
         res.end('<h1>Something Went Very Wrong</h1><p>Something went verywrong on the server.</p>');
     }
 
-    handlePublic(reqUrl, req, res) {
+    notFound(reqUrl, req, res) {
+        res.writeHead(404, {
+            'Content-Type': 'text/html'
+        });
+        res.end('<h1>404 Not Found</h1><p>The content you are looking for could not be found. Get wrekt.</p>');
+    }
+
+    async handlePublic(reqUrl, req, res) {
         // res.writeHead(200, {
         //     'Content-Type': 'text/html'
         // });
         // res.end('<h1>Hello World</h1><p>This is the main page for now</p>');
 
-        
+        try {
+            const item = (reqUrl.pathname.endsWith('/') || !path.extname(reqUrl.pathname))
+                ? path.join(reqUrl.pathname, 'index.html')
+                : reqUrl.pathname;
+
+            const filePath  = path.join(this.rootDir, 'public', item);
+            const file      = await fs.readFile(filePath);
+            const fileExt   = path.extname(filePath).toLowerCase();
+            const mime      = Server.mimeTypeMap[fileExt] || 'application/octet-stream';
+
+            // console.log(filePath);
+            // console.log(fileExt);
+            // console.log(mime);
+
+            res.writeHead(200, { 'Content-Type': mime });
+            res.end(file);
+
+        } catch (err) {
+            this.logger.logError(`Public request failed: ${err}`);
+            this.notFound(reqUrl, req, res);
+        }
     }
 
-    handleApi(reqUrl, req, res) {
+    async handleApi(reqUrl, req, res) {
         if (!(this.apiRouter)) {
             res.writeHead(500, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ message: 'No API Router configured.' }));
