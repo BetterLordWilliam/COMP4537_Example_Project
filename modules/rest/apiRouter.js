@@ -21,20 +21,13 @@ export default class ApiRouter {
     }
 
     handleRequest(reqUrl, req, res) {
-        // res.writeHead(200, { 'Content-Type': 'application/json' });
-        // res.end(JSON.stringify({ message: 'todo' }));
-
         let mEndpoint;
 
         for (const endpoint of this.endpoints) {
 
-            // console.log(endpoint);
-            // console.log(endpoint.resourceName);
-            // console.log(`/api${this.basePath}${endpoint}`);
-
             const endpointPath = this.pathify(endpoint);
 
-            if (endpointPath.match(reqUrl.pathname)) {
+            if (endpointPath === reqUrl.pathname) {
                 this.logger.logInformation('Resource endpoint located', 'ApiRouter');
                 mEndpoint = endpoint;
             } else {
