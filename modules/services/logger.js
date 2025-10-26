@@ -5,9 +5,6 @@ import ServerStrings from '../serverStrings.js';
 
 export default class Logger {
     constructor(logsPath, toConsole = true, toFile = true) {
-        this.info       = null;
-        this.error      = null;
-        this.warning    = null;
         this.toConsole  = toConsole;
         this.toFile     = toFile;
 

@@ -6,6 +6,7 @@ export default class ServerStrings {
         return `ERROR\t${new Date()}\t${tag}\t\t${message}`;
     }
 
-    static NAMES_ENDPOINT = '/names';
-    static FILE_ENDPOINT = '/file';
+    static NAMES_ENDPOINT   = '/names';
+    static FILE_ENDPOINT    = '/file';
+    static NOTSE_ENDPOINT   = '/notes';
 }

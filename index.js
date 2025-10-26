@@ -4,6 +4,7 @@ import path from 'path';
 import fs from 'fs/promises';
 
 import Logger       from './modules/services/logger.js';
+import NoteManager  from './modules/services/notemanager.js';
 import ApiRouter    from './modules/rest/apiRouter.js';
 
 import NamesEndpoint from './modules/rest/endpoints/names.js';
@@ -61,8 +62,9 @@ class Server {
         this.rootDir    = process.cwd();
         
         // Services
-        this.logger     = new Logger(this.logPath);
-        this.apiRouter  = new ApiRouter(this.logger);
+        this.logger         = new Logger(this.logPath);
+        this.noteManager    = new NoteManager(this.logger);
+        this.apiRouter      = new ApiRouter(this.logger);
 
         // API Endpoints
         this.apiRouter

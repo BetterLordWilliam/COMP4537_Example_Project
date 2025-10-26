@@ -18,6 +18,8 @@ export default class ApiRouter {
     
     registerEndpoint(endpoint) {
         this.endpoints.push(endpoint);
+
+        return this;
     }
 
     handleRequest(reqUrl, req, res) {
