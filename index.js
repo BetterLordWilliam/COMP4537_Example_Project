@@ -1,10 +1,8 @@
 import process from 'process';
-import Url from 'url';
 import http from 'http';
 
 import Logger       from './modules/services/logger.js';
 import ApiRouter    from './modules/rest/apiRouter.js';
-import ApiEndpoint  from './modules/rest/apiEndpoint.js';
 
 import NamesEndpoint from './modules/rest/endpoints/names.js';
 
@@ -31,10 +29,12 @@ class Server {
     }
 
     handlePublic(reqUrl, req, res) {
-        res.writeHead(200, {
-            'Content-Type': 'text/html'
-        });
-        res.end('<h1>Hello World</h1><p>This is the main page for now</p>');
+        // res.writeHead(200, {
+        //     'Content-Type': 'text/html'
+        // });
+        // res.end('<h1>Hello World</h1><p>This is the main page for now</p>');
+
+        
     }
 
     handleApi(reqUrl, req, res) {
