@@ -8,6 +8,7 @@ import NoteManager  from './modules/services/notemanager.js';
 import ApiRouter    from './modules/rest/apiRouter.js';
 
 import NamesEndpoint from './modules/rest/endpoints/names.js';
+import NotesEndpoint from './modules/rest/endpoints/notes.js';
 import { pathToFileURL } from 'url';
 
 class Server {
@@ -68,7 +69,8 @@ class Server {
 
         // API Endpoints
         this.apiRouter
-            .registerEndpoint(new NamesEndpoint(this.logger));
+            .registerEndpoint(new NamesEndpoint(this.logger))
+            .registerEndpoint(new NotesEndpoint(this.logger, this.noteManager));
     }
 
     serverConfused(reqUrl, req, res) {
