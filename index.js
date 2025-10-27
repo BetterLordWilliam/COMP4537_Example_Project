@@ -125,6 +125,17 @@ class Server {
                 const proto = (req.socket.encrypted) ? 'https' : 'http'; // a little redundant but in case
                 const url = new URL(`${proto}://${req.headers.host}${req.url}`);
 
+                res.headers['Access-Control-Allow-Origin']  = '*';
+                res.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, PATCH, DELETE, OPTIONS';
+                res.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization';
+
+                // Preflight request first and foremost
+                if (req.method === 'OPTIONS') {
+                    res.writeHead(204, res.headers);
+                    res.end();
+                    return;
+                }
+
                 // API or public
                 if (url.pathname.startsWith('/api')) {
                     this.handleApi(url, req, res);

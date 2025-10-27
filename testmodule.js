@@ -1,11 +1,12 @@
 // import mymath from './modules/math.js';
-import { Math, addition, asyncAddition } from './modules/math.js';
+// import { Math, addition, asyncAddition } from './modules/math.js';
+import MyMath, { addition, asyncAddition } from './modules/math.js';
 
 import Logger from './modules/services/logger.js';
 import NoteManager from './modules/services/notemanager.js';
 
-console.log(`PI approx: ${Math.PI}`);
-console.log(`E approx: ${Math.E}`);
+console.log(`PI approx: ${MyMath.PI}`);
+console.log(`E approx: ${MyMath.E}`);
 console.log(`Addition: ${addition(5, 7)}`);
 console.log(`Async Addition: ${await asyncAddition(10, 15)}`);
 

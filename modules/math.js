@@ -1,4 +1,4 @@
-export class Math {
+export default class Math {
   static PI  = 3.14;
   static E   = 2.72;
 

@@ -1,6 +1,4 @@
 import fs from 'fs/promises';
-import process from 'process';
-import path from 'path';
 import ServerStrings from '../serverStrings.js';
 
 export default class Logger {
