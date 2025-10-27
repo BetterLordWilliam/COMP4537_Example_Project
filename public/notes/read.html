@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/favicon.png" />
+    <title>Read</title>
+</head>
+<body>
+    <a href="./index.html">^ Back</a>
+    <br />
+    <form id="noteForm">
+        <label for="noteId">Note ID:</label><br />
+        <input type="text" id="noteId" name="noteId" /><br />
+        <input type="submit" value="Submit" />
+    </form>
+    <div>
+        <b>Response</b>
+        <pre id="responseOutput"></pre>
+        <input type="button" value="Clear" onclick="document.getElementById('responseOutput').innerText = ''" />
+    </div>
+    <script>
+        document.getElementById('noteForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const form = new FormData(e.target);
+            const response = await fetch(`/api/notes?id=${encodeURIComponent(form.get('noteId'))}`);
+            const responseData = await response.json();
+
+            console.log(responseData);
+
+            document.getElementById('responseOutput').innerText = JSON.stringify(responseData);
+        });
+    </script>
+</body>
+</html>

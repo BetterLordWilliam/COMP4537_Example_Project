@@ -118,18 +118,24 @@ class Server {
 
     start() {
         http.createServer((req, res) => {
-            this.logger.logInformation(`Request received, method: ${req.method}, pathname: ${req.url}`, 'Server');
 
-            const proto = (req.socket.encrypted) ? 'https' : 'http'; // a little redundant but in case
-            const url = new URL(`${proto}://${req.headers.host}${req.url}`);
+            try {
+                this.logger.logInformation(`Request received, method: ${req.method}, pathname: ${req.url}`, 'Server');
 
-            // API or public
-            if (url.pathname.startsWith('/api')) {
-                this.handleApi(url, req, res);
-            } else if (req.method === 'GET') {
-                this.handlePublic(url, req, res);
-            } else {
+                const proto = (req.socket.encrypted) ? 'https' : 'http'; // a little redundant but in case
+                const url = new URL(`${proto}://${req.headers.host}${req.url}`);
+
+                // API or public
+                if (url.pathname.startsWith('/api')) {
+                    this.handleApi(url, req, res);
+                } else if (req.method === 'GET') {
+                    this.handlePublic(url, req, res);
+                } else {
+                    throw new Error('Non-GET request for public resource');
+                }
+            } catch (err) {
                 this.serverConfused(url, req, res);
+                this.logger.logError(`Server really failed big time ${err}`);
             }
 
         }).listen(this.port);
